@@ -33,7 +33,7 @@ class Reservation < ApplicationRecord
 	def overlapping?
 		new_start = self.start_date
 		new_end = self.end_date
-		new_duration = self.duration
+		#new_duration = self.duration
 		res_arr = self.accomodation.reservations
 		res_arr.each do |reservation|
 			if (new_start >= reservation.start_date &&
@@ -49,7 +49,7 @@ class Reservation < ApplicationRecord
 			elsif (new_start <= reservation.start_date && new_end >= reservation.end_date)
 				errors.add(:new_duration,
 						   "New reservation INTERVAL is overlapping a pre-existing reservation's dates for this accomodation.")
-				puts "ERROR - new_start :#{new_start.day} is before #{reservation.start_date.day}\nAND\tnew_end : #{new_end.day} is after #{reservation.end_date.day}"
+				puts "ERROR - new_start :#{new_start.day} is before #{reservation.start_date.day}\n  AND\tnew_end : #{new_end.day} is after #{reservation.end_date.day}"
 			end
 		end
 	end
