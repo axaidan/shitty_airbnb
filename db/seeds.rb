@@ -32,19 +32,22 @@ end
 end
 
 #ACCOMODATION
-50.times do 
-	Accomodation.create(city: City.all[rand(0..9)], admin: User.all[rand(0..19)], has_wifi?: Faker::Boolean.boolean, price: rand(15..80), beds: rand(1..4), desc: Faker::Lorem.words(number: 120).join(' '), welcome: Faker::Quote.famous_last_words)
+User.all.each do |admin|
+	5.times do 
+		Accomodation.create(city: City.all[rand(0..9)], admin: admin, has_wifi?: Faker::Boolean.boolean, price: rand(15..80), beds: rand(1..4), desc: Faker::Lorem.words(number: 120).join(' '), welcome: Faker::Quote.famous_last_words)
+	end
 end
 
 #RESERVATION
 Accomodation.all.each do |accomodation|
 	#FUTURE RESERVATION
-	rand(2..5).times do 
+	10.times do 
 		admin1 = User.all[rand(0..19)]
+		faker_start = Faker::Date.between(from: 1.days.from_now, to: 8.days.from_now)
 		Reservation.create(guest: User.all[rand(0..19)], 
-						   accomodation: admin1.accomodations.all[rand(0..admin1.accomodations.all.count)], 
-						   start_date: Faker::Date.between(from: 1.days.from_now, to: 8.days.from_now), 
-						   end_date: Faker::Date.between(from: 8.days.from_now, to: 12.days.from_now))
+						   accomodation: admin1.accomodations.all[rand(0..(admin1.accomodations.all.count - 1))], 
+						   start_date: faker_start, 
+						   end_date: Faker::Date.between(from: faker_start + 2.day, to: faker_start + 10.day))
 	end
 
 =begin
