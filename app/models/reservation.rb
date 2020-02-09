@@ -32,10 +32,12 @@ class Reservation < ApplicationRecord
 					new_start <= reservation.end_date)
 				errors.add(:new_start,
 						   "New reservation's START Date is overlapping a pre-existing reservation's dates for this accomodation.")
+				puts "ERROR - new_start :#{new_start.day} is between #{reservation.start_date.day} and #{reservation.end_date.day}"
 			elsif (new_end >= reservation.start_date &&
 				   new_end <= reservation.end_date)
 				errors.add(:new_end,
 						   "New reservation's END Date is overlapping a pre-existing reservation's dates for this accomodation.")
+				puts "ERROR - new_end :#{new_end.day} is between #{reservation.start_date.day} and #{reservation.end_date.day}"
 =begin
 			elsif (new_end - (new_duration/2).day >= reservation.start_date &&
 				   new_end - (new_duration/2).day <= reservation.end_date)
@@ -46,6 +48,7 @@ class Reservation < ApplicationRecord
 			elsif (new_start <= reservation.start_date && new_end >= reservation.end_date)
 				errors.add(:new_duration,
 						   "New reservation INTERVAL is overlapping a pre-existing reservation's dates for this accomodation.")
+				puts "ERROR - new_start :#{new_start.day} is before #{reservation.start_date.day}\nAND\tnew_end : #{new_end.day} is after #{reservation.end_date.day}"
 			end
 		end
 	end
