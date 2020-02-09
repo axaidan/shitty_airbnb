@@ -2,6 +2,7 @@ class Reservation < ApplicationRecord
 	#GUESTS
 	belongs_to :guest, class_name: "User"
 	validates :guest, presence: true
+	validate :guest_is_admin?
 
 	#ACCOMODATION
 	belongs_to :accomodation
@@ -22,6 +23,13 @@ class Reservation < ApplicationRecord
 		errors.add(:start_date, "End Date is before Start Date") unless	start_date < end_date	
 	end
 
+	def guest_is_admin?
+		if self.guest == self.accomodation.admin
+			errors.add(:guest, "GUEST is ADMIN")
+			puts "ERROR - guest #{guest.id} is admin #{accomodation.admin.id}"
+		end
+	end
+
 	def overlapping?
 		new_start = self.start_date
 		new_end = self.end_date
@@ -38,13 +46,6 @@ class Reservation < ApplicationRecord
 				errors.add(:new_end,
 						   "New reservation's END Date is overlapping a pre-existing reservation's dates for this accomodation.")
 				puts "ERROR - new_end :#{new_end.day} is between #{reservation.start_date.day} and #{reservation.end_date.day}"
-=begin
-			elsif (new_end - (new_duration/2).day >= reservation.start_date &&
-				   new_end - (new_duration/2).day <= reservation.end_date)
-				errors.add(:new_duration,
-						   "New reservation INTERVAL is overlapping a pre-existing reservation's dates for this accomodation.")
-				puts self.errors.messages
-=end
 			elsif (new_start <= reservation.start_date && new_end >= reservation.end_date)
 				errors.add(:new_duration,
 						   "New reservation INTERVAL is overlapping a pre-existing reservation's dates for this accomodation.")
